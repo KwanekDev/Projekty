@@ -1,0 +1,88 @@
+#Dev: Kwanek 
+options:
+    #Wszystko w tych zakładkach jest customizowalne w przypadku problemów zalecam się ze mną skontaktować
+    #Nazwy firm
+    firma1: Golding S.A # Example
+    firma2: Ziemniaki z.o.o # Example
+    firma3: Mario Spółka Akcyjna # Example
+    firma4: BuyNLarge Corp. # Example
+    #.... Tutaj dalej się dodaje opcje w taki sam sposób jak u góry
+    #=========Gui=============
+    MainGui: &7&lStrona główna
+    PortfelGui: &7&lPortfel
+    #Menu Items
+    #===MainGui===
+    TloItem: Black stained glass pane #Item ustawiany jako tlo
+    #Portfel
+    PortfelMenuCMD: 99 #CustomModelData dla textury wyświetlania w ekwpiunku
+    PortfelMenuItem: Brown dye #Item ustawiony jako portfel w menu głównym
+    PortfelMenuNazwa: &8&lPortfel #Nazwa wyświetlana w portfelu
+    #===Portfel GUI===
+    #Giełda menu
+    GieldaMenuCMD: 101 #CustomModelData dla textury wyświetlania w ekwpiunku
+    GieldaMenuItem: barrier #Item ustawiony jako wejscie na strone gieldy w menu głównym
+    GieldaMenuNazwa: &8&lStrona Giełdy #Nazwa wyświetlana jako item
+    #Refresh Page
+    RefreshMenuCMD: 100 #CustomModelData dla textury wyświetlania w ekwpiunku
+    RefreshMenuItem: White dye #Item ustawiony jako refresh w menu głównym
+    RefreshMenuNazwa: &8&lOdśwież #Nazwa wyświetlana jako item
+    #Firmy
+    FirmyIkonkaCMD: 102 #CustomModelData dla textury wyświetlania w ekwpiunku
+    FirmyMenuItem: barrier #Item ustawiony jako refresh w menu głównym
+
+
+#=====================  
+# █ █ ████ ███    ]█ |
+# █ █ █  █ █  █   ]█ |
+# ██  █  █ █  █   ]█ |
+# █ █ ████ ███    ]█ |
+#=====================
+function MainGui(p: player, zgui: text):
+    if {_zgui} is "MainGui":
+        set {_gui} to chest inventory with 1 rows named "{@MainGui}"
+        set slot (integers between 0 and 10) of {_gui} to {@TloItem} named " " with lore " "
+        #Portfel
+        set slot 0 of {_gui} to {@PortfelMenuItem} named "{@PortfelMenuNazwa}" with lore "&8&lPosiadasz aktualnie:" and "&a&l{@firma1}:&7 %{AkcjePosiadane::firma1::%{_p}%}%" and "&a&l{@firma2}:&7 %{AkcjePosiadane::firma2::%{_p}%}%" and "&a&l{@firma3}:&7 %{AkcjePosiadane::firma3::%{_p}%}%" and "&a&l{@firma4}:&7 %{AkcjePosiadane::firma4::%{_p}%}%" and " " and "&8&lKliknij aby nimi zarządzać"
+        #Strona Giełdy
+        set slot 5 of {_gui} to {@GieldaMenuItem} named "{@GieldaMenuNazwa}" with lore "&a&lKliknij, aby przejść na strone giełdy" with custom model data "{@GieldaMenuCMD}"
+
+        open {_gui} to {_p}
+    if {_zgui} is "PortfelGui":
+        set {_gui} to chest inventory with 3 rows named "{@PortfelGui}"
+        set slot (integers between 0 and 37) of {_gui} to {@TloItem} named " " with lore " "
+        Set slot 0 of {_gui} to barrier named " "
+        #Firma 1
+        set slot 11 of {_gui} to {@FirmyMenuItem} named "{@firma1}" with lore "&8&lPosiadasz aktualnie:" and "&a&l{@firma1}:&7 %{AkcjePosiadane::firma1::%{_p}%}% Akcji!" with custom model data "{@FirmyIkonkaCMD}"
+        #Firma 2
+        set slot 12 of {_gui} to {@FirmyMenuItem} named "{@firma2}" with lore "&8&lPosiadasz aktualnie:" and "&a&l{@firma2}:&7 %{AkcjePosiadane::firma2::%{_p}%}% Akcji!" with custom model data "{@FirmyIkonkaCMD}"
+        #Firma 3
+        set slot 14 of {_gui} to {@FirmyMenuItem} named "{@firma3}" with lore "&8&lPosiadasz aktualnie:" and "&a&l{@firma2}:&7 %{AkcjePosiadane::firma3::%{_p}%}% Akcji!" with custom model data "{@FirmyIkonkaCMD}"
+        #Firma 4 
+        set slot 15 of {_gui} to {@FirmyMenuItem} named "{@firma4}" with lore "&8&lPosiadasz aktualnie:" and "&a&l{@firma4}:&7 %{AkcjePosiadane::firma4::%{_p}%}% Akcji!" with custom model data "{@FirmyIkonkaCMD}"
+        #...                                                                                                                                         ^
+        #                                                                                                                                            |
+        #... I tak dalej można Dodawać firmy do giełdy UWAGA! Ważne jest to żeby zmienić Opcje która firma ( {@firmaX} ) i ważne jest zmienienie zmiennej firmy
+        # opcje firmy trzeba wpierw zdefiniować na samej górze! wpierw trzeba zdefiniować na samej górze 
+        open {_gui} to {_p}
+    if {_zgui} is "GieldaGui":
+        set {_gui} to chest inventory with 3 rows named "{@PortfelGui}"
+    
+
+On inventory click:
+    event-inventory is not player's inventory
+    if name of event-inventory is "{@MainGui}":
+        cancel event
+        if clicked slot is 0:
+            #Do zrobienia
+    
+
+every 1 minutes:
+    chance of 80:
+        set {kurskrypto} to {kurskrypto} * 1.10
+    else:
+        set {kurskrypto} to {kurskrypto} / 1.10
+
+
+command /kurs:
+    trigger:
+        send "kurs wynosi %{kurskrypto}%"

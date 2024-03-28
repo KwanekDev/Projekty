@@ -1,0 +1,44 @@
+#\\ KOMPUTER
+on right click on player head:
+	if block under is spruce log:
+		menadzer(player, "1")
+#\\ GUI
+function menadzer(p: player, gui: text):
+	if {_gui} is "1":
+		#\\Stanowisko główne
+		set {_xgui} to chest inventory with 54 rows named "&f七七七七七七七七ㇺ"
+		set slot 12 of {_xgui} to map named "Wyplata menadzerska" with lore "Wyplata" with custom model data 1010
+		set slot 13 of {_xgui} to map named "Zamow towar" with lore "Zamow towar do sklepu" with custom model data 1010
+		set slot 14 of {_xgui} to map named "Zarobek" with lore "Zarobek ze sprzedazy" with custom model data 1010
+		open {_xgui} to {_p}
+	#\\wyplata
+	else if {_gui} is "2":
+		set {_xgui} to chest inventory with 1 rows named "Komputer menadzera: wyplaty"
+		set slot (integers between 0 and 9) of {_xgui} to black stained glass pane
+		set slot 4 of {_xgui} to white dye named "Twoja wypłata" with lore "&a&lDo wypłaty: &7&l%{wyplatamen%{_p}%}%" with custom model data 4
+		open {_xgui} to {_p}
+	#\\Zamawianie poczatek
+	else if {_gui} is "3":
+		set {_xgui} to chest inventory with 1 rows named "Komputer menadzera: zamow towar"
+		set slot (integers between 0 and 9) of {_xgui} to black stained glass pane
+		set slot 4 of {_xgui} to barrier dye named "Export wodny" with lore " " with custom model data 5
+		set slot 6 of {_xgui} to barrier dye named "Lokalny dostawca" with lore " " with custom model data 6
+		open {_xgui} to {_p}
+	else if {_gui} is "4":
+	#\\Export wodny
+		set {_xgui} to chest inventory with 1 rows named "Komputer menadzera: zamow towar"
+		set slot (integers between 0 and 9) of {_xgui} to black stained glass pane
+		set slot 4 of {_xgui} to cookie named "Ciastka Czekoladowe" with lore "&a7$/Paleta " with custom model data 7
+		set slot 5 of {_xgui} to bread named "Pieczywo" with lore "&a30$/Paleta" with custom model data 8
+		set slot 6 of {_xgui} to water bottle named "Woda" with lore "&a15$/Paleta zgrzewek" with custom model data 9
+		set slot 7 of {_xgui} to water bottle named "Alkohole" with lore "&a20$/Paleta" with custom model data 10
+		open {_xgui} to {_p}
+on inventory click:
+	if name of event-inventory is "&f七七七七七七七七ㇺ":
+		cancel event
+		if clicked slot is 12:
+			menadzer(player, "2")
+		if clicked slot is 13:
+		
+
+	

@@ -1,0 +1,2 @@
+on join:
+    set slot 9 and 10 and 11 of player's inventory to map named "&7&lDokumenty" with lore "&8&lPokaż dokumenty"

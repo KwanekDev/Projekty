@@ -1,0 +1,66 @@
+on leave:
+	set {praca::zlom::%player%} to false
+
+on region enter:
+	"%event-region%" contain "zlomzbior"
+	set {praca::zlom::%player%} to true
+	send "&8&lRozpocząłeś prace na złomie! &a&lNapisz /zbieraj&8&l, aby rozpocząć zbieranie. Nastepnie podejdź do złomiarza aby sprzedać ten złom"
+
+on region exit:
+	"%event-region%" contain "zlomzbior"
+	set {praca::zlom::%player%} to false
+	send "&8&lZakończyłeś prace na złomie!"
+
+command /zbieraj:
+	trigger:
+		if {praca::zlom::%player%} is true:
+			if player doesn't have 32 iron ingot:
+				set {cooldown::zbior3::%player%} to 25
+				apply potion of slowness of tier 255 to player for 5.5 seconds
+				send actionbar "&a&l|||||" to player
+				wait 1 second
+				send actionbar "&a&l|&8&l&l||||" to player
+				wait 1 second
+				send actionbar "&a&l||&8&l&l|||" to player
+				wait 1 second
+				send actionbar "&a&l|||&8&l&l||" to player
+				wait 1 second
+				send actionbar "&a&l||||&8&l&l|" to player
+				wait 1 second
+				send actionbar "&a&l|||||" to player
+				wait 0.5 second
+				open chest inventory with 3 rows named "&6Zbieranie Zlomu" to player
+				loop 26 times:
+					chance of 15%:
+						set slot loop-number - 1 of player's current inventory to iron ingot named "&8Zlom"
+				loop 25 times:
+					wait 1 second
+					remove 1 from {cooldown::zbior3::%player%}
+			else:
+				send "&8&lNie udźwigniesz już więcej złomu"
+		else:
+			send "&8&lAktualnie się nie znajdujesz w miejscu gdzie można zbierać złom"
+
+
+on jump:
+	{praca::zlom::%player%} is true
+	cancel event
+	stop
+
+on rightclick:
+	name of clicked entity is "zlomiarz"
+	set {_xgui} to chest inventory with 1 rows named "&8&lSprzedaż"
+	set slot 4 of {_xgui} to netherite scrap named "&8&lSprzedaj wszystko" with lore " "
+	open {_xgui} to player
+
+on inventory click:
+	name of event-inventory is "&8&lSprzedaż"
+	set {posiadasz::%player%} to number of iron ingot in the player's inventory
+	clicked slot is 4
+	cancel event
+	set {sell::%player%} to {posiadasz::%player%} * 2 
+	remove 32 iron ingots from player's inventory
+	add {sell::%player%} to player's balance
+	close player's inventory
+	send "&8&lSprzedano wszystko za: &a&l%{sell::%player%}%"
+	set {sell::%player%} to 0
